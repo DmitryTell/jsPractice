@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Калькуляторы фигур</title>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="title">Калькуляторы геометрических фигур</h1>
+            <nav class="menu">
+                <select id="select-figure" class="menu__select">
+                    <option disabled selected>Выберите фигуру</option>
+                    <!--Render from JS-->
+                </select>
+                <select id="select-calc" class="menu__select hidden">
+                    <option disabled selected>Что рассчитывать?</option>
+                    <!--Render from JS-->
+                </select>
+            </nav>
+        </div>
+    </header>
+    <main class="content">
+        <div class="container -block">
+            <p class="content__show" id="show">
+                Здесь будет показан результат...
+                <!--Rende from JS-->
+            </p>
+            <div class="content__count-field" id="count">
+                Здесь будут приниматься данные для рассчета...
+                <!--Rende from JS-->
+            </div>
+            <button id="result">Рассчитать</button>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            (с) Дмитрий Телеганов 2023г.
+        </div>
+    </footer>
+</body>
+<script src="js/script.js"></script>
+</html>
