@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Угадай число</title>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>Игра - Угадай число</h1>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="content">
+                <p id="game-log">Введите число и нажмите "Ход"</p>
+                <input id="number" type="number" placeholder="Введите число от 1 до 100">
+                <button id="turn">Ход</button>
+            </div>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            (c) Дмитрий Телеганов - Практика JS - Угадай число
+        </div>
+    </footer>
+</body>
+<script>
+    'use strict';
+
+    const logElement = document.querySelector('#game-log');
+    const numberElement = document.querySelector('#number');
+    const buttonElement = document.querySelector('#turn');
+
+    let isReset = false;
+
+    const checkButton = () => buttonElement.textContent = `${isReset ? 'Сброс' : 'Ход'}`;
+    const getRandomInt = () => Math.round(Math.random() * (100 - 1)) + 1;
+
+    let randomNumber = getRandomInt();
+    let counter = 0;
+
+    checkButton();
+    buttonElement.addEventListener('click', () => {
+        if (isReset) {
+            counter = 0;
+            logElement.textContent = 'Введите число и нажмите "Ход"';
+            numberElement.value = '';
+            randomNumber = getRandomInt();
+            isReset = false;
+            checkButton();
+        } else {
+            if (+numberElement.value === randomNumber) {
+                counter++;
+                logElement.textContent = `Поздравляю, вы угадали число! Использовано попыток: ${counter}`;
+                isReset = true;
+                checkButton();
+            } else if (+numberElement.value < randomNumber) {
+                counter++;
+                logElement.textContent = 'Введите число больше';
+            } else if (+numberElement.value > randomNumber) {
+                counter++;
+                logElement.textContent = 'Введите число меньше';
+            } else {
+                counter++;
+                logElement.textContent = 'Вы ввели некорректные данные';
+            }
+        }
+    });
+</script>
+</html>
