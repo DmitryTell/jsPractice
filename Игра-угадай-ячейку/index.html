@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Угадай ячейку</title>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>Игра - Угадай ячейку</h1>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="content">
+                <p id="game-log">Нажмите на кнопку, чтобы начать игру</p>
+                <p id="timer">01:30</p>
+                <button>Начать</button>
+                <table>
+                    <!--Render JS-->
+                </table>
+            </div>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            (c) Дмитрий Телеганов - Практика JS - Угадай число
+        </div>
+    </footer>
+</body>
+<script>
+    'use strict';
+
+    ;(table => {
+        const tableElement = document.querySelector(table);
+        let numCount = 1;
+
+        for (let i = 0; i < 10; i++) {
+            let rowElement = document.createElement('tr');
+
+            for (let j = 0; j < 10; j++) {
+                let colElement = document.createElement('td');
+                colElement.dataset.num = numCount;
+                numCount++;
+
+                rowElement.appendChild(colElement);
+            }
+
+            tableElement.appendChild(rowElement);
+        }
+    })('table');
+
+    const logElement = document.querySelector('#game-log');
+    const timerElement = document.querySelector('#timer');
+    const buttonElement = document.querySelector('button');
+    const cellElements = document.querySelectorAll('td');
+
+    let randomCells = [];
+    let isRestart = false;
+    let counterToWin = 0;
+    let min = 1;
+    let sec = 30;
+    let timerId;
+
+    const checkButton = () => buttonElement.textContent = (isRestart ? 'Заново' : 'Начать');
+    const checkGame = () => {
+        if (counterToWin === 10) {
+            logElement.textContent = 'Вы выиграли!';
+            buttonElement.disabled = false;
+
+            isRestart = true;
+
+            checkButton();
+        } else if (min === 0 && sec === 0) {
+            logElement.textContent = 'Время вышло. Вы проиграли!';
+            buttonElement.disabled = false;
+
+            isRestart = true;
+
+            checkButton();
+        }
+    }
+    const getRandomInt = () => Math.round(Math.random() * 99) + 1;
+    const getRandomCells = () => {
+        let res = [];
+
+        for (let i = 0; i < 10; i++) {
+            let randomNum = getRandomInt();
+
+            if (res.includes(randomNum)) {
+                i--;
+                continue;
+            } else {
+                res.push(randomNum);
+            }
+        }
+
+        return res;
+    }
+    const startGame = () => {
+        logElement.textContent = 'Ход игры...';
+
+        randomCells = getRandomCells();
+    }
+    const addZero = num => String(num).length < 2 ? '0' + num : num;
+    const goTimer = () => {
+        if (counterToWin === 10 || (min === 0 && sec === 0)) {
+            clearInterval(timerId);
+        } else if (min > 0 && sec === 0) {
+            min--;
+            sec = 59;
+        } else {
+            sec--;
+        }
+
+        checkGame();
+
+        timerElement.textContent = `${addZero(min)}:${addZero(sec)}`;
+    }
+
+    buttonElement.addEventListener('click', () => {
+        if (isRestart) {
+            logElement.textContent = 'Нажмите на кнопку, чтобы начать игру';
+            timerElement.textContent = '01:30';
+            [...cellElements].map(el => el.className = '');
+
+            randomCells = [];
+            isRestart = false;
+            counterToWin = 0;
+            min = 1;
+            sec = 30;
+
+            checkButton();
+        } else {
+            buttonElement.disabled = true;
+            
+            timerId = setInterval(goTimer, 1000);
+            startGame();
+        }
+    });
+    [...cellElements].forEach(el => el.addEventListener('click', () => {
+        if (
+            randomCells.length > 0 &&
+            randomCells.includes(+el.dataset.num) &&
+            timerElement.textContent !== '00:00') {
+            el.classList.add('guessed');
+
+            counterToWin++;
+
+            checkGame();
+        }
+    }));
+</script>
+</html>
